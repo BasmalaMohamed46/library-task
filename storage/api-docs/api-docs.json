@@ -1,0 +1,391 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Laravel OpenApi Demo Documentation",
+        "description": "L5 Swagger OpenApi description",
+        "contact": {
+            "email": "admin@admin.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Demo API Server"
+        }
+    ],
+    "paths": {
+        "/api/borrow": {
+            "post": {
+                "tags": [
+                    "Borrow"
+                ],
+                "summary": "Borrow a book",
+                "description": "Borrow a book from a library",
+                "operationId": "borrowBook",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BorrowBook"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Borrowing"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        },
+        "/api/return/{id}": {
+            "post": {
+                "tags": [
+                    "Borrow"
+                ],
+                "summary": "Return a book",
+                "description": "Return a book to a library",
+                "operationId": "returnBook",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Borrowing ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ReturnBook"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Borrowing"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        },
+        "/api/report": {
+            "get": {
+                "tags": [
+                    "Borrow"
+                ],
+                "summary": "Generate a report",
+                "description": "Generate a report of all borrowings",
+                "operationId": "generateReport",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Borrowing"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "BorrowBook": {
+                "title": "BorrowBook",
+                "description": "Request to borrow a book from a library",
+                "required": [
+                    "student_id",
+                    "copy_id"
+                ],
+                "properties": {
+                    "student_id": {
+                        "title": "Student ID",
+                        "description": "The unique identifier of a student",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "copy_id": {
+                        "title": "Copy ID",
+                        "description": "The unique identifier of a copy",
+                        "type": "integer",
+                        "example": "1"
+                    }
+                },
+                "type": "object"
+            },
+            "ReturnBook": {
+                "title": "ReturnBook",
+                "description": "Request to return a book to a library",
+                "required": [
+                    "return_status"
+                ],
+                "properties": {
+                    "return_status": {
+                        "description": "The status of the book being returned",
+                        "type": "string",
+                        "example": "Good"
+                    }
+                },
+                "type": "object"
+            },
+            "Book": {
+                "title": "Book Model",
+                "description": "Book Model",
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of a book",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": "1"
+                    },
+                    "title": {
+                        "description": "The title of the book",
+                        "type": "string",
+                        "example": "The Great Gatsby"
+                    },
+                    "created_at": {
+                        "title": "Created at",
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    },
+                    "updated_at": {
+                        "title": "Updated at",
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Book"
+                }
+            },
+            "Borrowing": {
+                "title": "Borrowing Model",
+                "description": "Borrowing Model",
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of a borrowing",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": "1"
+                    },
+                    "student_id": {
+                        "description": "The unique identifier of a student",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": "1"
+                    },
+                    "copy_id": {
+                        "description": "The unique identifier of a copy",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": "1"
+                    },
+                    "borrowed_at": {
+                        "description": "The date and time the book was borrowed",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2020-01-27"
+                    },
+                    "expected_return_at": {
+                        "description": "The date and time the book is expected to be returned",
+                        "type": "string",
+                        "format": "date",
+                        "example": "2020-01-27"
+                    },
+                    "returned_at": {
+                        "description": "The date and time the book was returned",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27"
+                    },
+                    "return_status_id": {
+                        "description": "The unique identifier of the return status",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": "1"
+                    },
+                    "created_at": {
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    },
+                    "updated_at": {
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Borrowing"
+                }
+            },
+            "Copy": {
+                "title": "Copy Model",
+                "description": "Copy Model",
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of a copy",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": "1"
+                    },
+                    "book_id": {
+                        "description": "The unique identifier of a book",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": "1"
+                    },
+                    "status_id": {
+                        "description": "The unique identifier of a status",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": "1"
+                    },
+                    "created_at": {
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    },
+                    "updated_at": {
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Copy"
+                }
+            },
+            "Status": {
+                "title": "Status Model",
+                "description": "Status Model",
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of a status",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": "1"
+                    },
+                    "name": {
+                        "description": "The name of the status",
+                        "type": "string",
+                        "example": "Available"
+                    },
+                    "created_at": {
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    },
+                    "updated_at": {
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Status"
+                }
+            },
+            "Student": {
+                "title": "Student",
+                "description": "Student Model",
+                "properties": {
+                    "id": {
+                        "description": "The unique identifier of a student",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": "1"
+                    },
+                    "name": {
+                        "description": "The name of the student",
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "description": "The email of the student",
+                        "type": "string",
+                        "format": "email",
+                        "example": "johnDoe@gmail.com"
+                    },
+                    "created_at": {
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    },
+                    "updated_at": {
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Student"
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Borrow",
+            "description": "API Endpoints for Borrow"
+        }
+    ]
+}
